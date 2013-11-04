@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "test2.js",
+  "sourceRoot": "../../coffee/folder/",
+  "sources": [
+    "test2.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;CAAA,CAAA,CAAA,IAAO;CAAP"
+}
