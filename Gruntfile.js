@@ -31,8 +31,11 @@ module.exports = function(grunt) {
     // Configuration to be run (and then tested).
     script_tags: {
       test : {
+        options: {
+          root: 'javascripts'
+        },
         files: {
-          'views/layout.jade' : ['public/javascripts/**/*.js']
+          'layout.jade' : ['public/javascripts/**/*.js']
         }
       },
 

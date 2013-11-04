@@ -18,32 +18,43 @@ module.exports = function(grunt) {
     var options = this.options({
       // eventually could do html and haml
       language: 'jade',
-      start: 'javascripts'
+      root: 'javascript'
     });
 
-    // Iterate over all specified file groups.
-    var paths = getPaths(this.files, options.start);
-    log(paths);
+    this.files.forEach(function(f) {
+      // Iterate over all specified file groups.
+      var paths = getPaths(f.src, options.root);
+      // break file into array here
+      prepareTarget(f.dest);
 
+      // write back into file at the end
+    });
+    
   });
 
+  var getPaths = function (files, root) {
+    var paths = []
+    for (var i = 0; i < files.length; i++){
+      var path = files[i]
+      var startIndex = path.indexOf(root);
+      path = path.slice(startIndex);
+      paths.push(path);
+    }
 
-
-  var getPaths = function (files, start) {
-    var paths = [];
-    files.forEach(function(f) {
-      for (var i = 0; i < f.src.length; i++){
-        var path = f.src[i];
-        var startIndex = path.indexOf(start);
-        path = path.slice(startIndex);
-        paths.push(path);
-      }
-
-    });
     return paths;
   }
+
+  var prepareTarget = function (target) {
+    // find start and end targets and clear out everything between
+    log(target);
+    // return starting index?
+  }
+
+  // write each path in, checking for special ones
+
+
   var log = function (obj) {
-    grunt.log.writeln( JSON.stringify(obj));
+    grunt.log.writeln( "-> " + JSON.stringify(obj));
   }
 
 };
