@@ -8,6 +8,8 @@
 
 'use strict';
 
+var fs = require('fs');
+
 module.exports = function(grunt) {
 
   // Please see the Grunt documentation for more information regarding task
@@ -24,10 +26,11 @@ module.exports = function(grunt) {
     this.files.forEach(function(f) {
       // Iterate over all specified file groups.
       var paths = getPaths(f.src, options.root);
-      // break file into array here
-      prepareTarget(f.dest);
+      var target = readTargetFile(f.dest);
 
+      var start = prepareTarget(target);
       // write back into file at the end
+      writeTargetFile(target, start, paths, f.dest, options.language);
     });
     
   });
@@ -44,10 +47,50 @@ module.exports = function(grunt) {
     return paths;
   }
 
+  var readTargetFile = function (path) {
+    return fs.readFileSync(path, 'utf-8').split('\n');
+  }
+
+  var writeTargetFile = function (target, start, paths, path, language) {
+    var spaces = target[start].match(/^\s+/);
+    if (spaces == null){
+      spaces = "";
+    }
+
+    for (var i = 0; i < paths.length; i++) {
+      var tag = spaces;
+      switch (language) {
+        case 'jade':
+          tag += "script(type='text/javascript', src='" + paths[i] + "')"
+          break;
+      }
+      target.splice(start + i + 1, 0, tag);
+    }
+    grunt.log.writeln(target.join('\n'));
+  }
+
+  var getTemplate = function () {
+    
+  }
+
   var prepareTarget = function (target) {
-    // find start and end targets and clear out everything between
-    log(target);
-    // return starting index?
+    var start = -1;
+    var end = -1;
+    for (var i = 0; i < target.length; i++){
+      if (start == -1){
+        if( target[i].match(/PRINT_SCRIPTS/) != null){
+          start = i;
+        }
+      } else if (end == -1) {
+        if( target[i].match(/END_PRINT_SCRIPTS/) != null){
+          end = i;
+        }
+      } else break;
+    }
+    var diff = end - start;
+    target.splice(start+1, diff-1);
+
+    return start;
   }
 
   // write each path in, checking for special ones
