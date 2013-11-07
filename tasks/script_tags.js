@@ -63,7 +63,7 @@ module.exports = function(grunt) {
       target.splice(start + i + 1, 0, tag);
     }
 
-    file = target.join('\n');
+    var file = target.join('\n');
     // return;
     fs.writeFileSync(path, file);
 
