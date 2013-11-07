@@ -32,10 +32,12 @@ module.exports = function(grunt) {
     script_tags: {
       test : {
         options: {
-          root: 'javascripts'
+          root: 'javascripts',
+          start: ['test/public/javascripts/test.js'],
+          end: ['test/public/javascripts/aa.js']
         },
         files: {
-          'layout.jade' : ['public/javascripts/**/*.js']
+          'test/layout.jade' : ['test/public/javascripts/**/*.js']
         }
       },
 

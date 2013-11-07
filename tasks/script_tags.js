@@ -20,7 +20,9 @@ module.exports = function(grunt) {
     var options = this.options({
       // eventually could do html and haml
       language: 'jade',
-      root: 'javascript'
+      root: 'javascript',
+      start: [],
+      end: []
     });
 
     this.files.forEach(function(f) {
@@ -31,7 +33,7 @@ module.exports = function(grunt) {
       var start = prepareTarget(target);
       var template = getTemplate(options.language);
       // write back into file at the end
-      writeTargetFile(target, start, paths, f.dest, template);
+      writeTargetFile(target, start, paths, f.dest, template, options.start, options.end);
     });
     
   });
@@ -52,19 +54,33 @@ module.exports = function(grunt) {
     return fs.readFileSync(path, 'utf-8').split('\n');
   }
 
-  var writeTargetFile = function (target, start, paths, path, template) {
+  var writeTargetFile = function (target, start, paths, path, template, startScripts, endScripts) {
     var spaces = target[start].match(/^\s+/);
     if (spaces == null){
       spaces = "";
     }
-
+    var scriptTags = []
+    // clear start and end script from the rest
     for (var i = 0; i < paths.length; i++) {
-      var tag = spaces + template.join(paths[i]);
-      target.splice(start + i + 1, 0, tag);
+      if (startScripts.indexOf(paths[i]) == -1 || endScripts.indexOf(paths[i]) == -1 ) {
+        paths.splice(i, 1);
+      }
     }
 
+    var groups = [startScripts, paths, endScripts];
+
+    for (var i = 0; i < groups.length; i++) {
+      for (var j = 0; j < groups[i].length; j++) {
+        scriptTags.push(spaces + template.join(groups[i][j]));
+      }      
+    }
+
+    for (var i = 0; i < scriptTags.length; i++){
+      target.splice(start + 1 + i, 0, scriptTags[i]);
+      
+    }
+ 
     var file = target.join('\n');
-    // return;
     fs.writeFileSync(path, file);
 
   }
