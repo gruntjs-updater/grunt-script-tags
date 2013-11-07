@@ -29,8 +29,9 @@ module.exports = function(grunt) {
       var target = readTargetFile(f.dest);
 
       var start = prepareTarget(target);
+      var template = getTemplate(options.language);
       // write back into file at the end
-      writeTargetFile(target, start, paths, f.dest, options.language);
+      writeTargetFile(target, start, paths, f.dest, template);
     });
     
   });
@@ -51,26 +52,33 @@ module.exports = function(grunt) {
     return fs.readFileSync(path, 'utf-8').split('\n');
   }
 
-  var writeTargetFile = function (target, start, paths, path, language) {
+  var writeTargetFile = function (target, start, paths, path, template) {
     var spaces = target[start].match(/^\s+/);
     if (spaces == null){
       spaces = "";
     }
 
     for (var i = 0; i < paths.length; i++) {
-      var tag = spaces;
-      switch (language) {
-        case 'jade':
-          tag += "script(type='text/javascript', src='" + paths[i] + "')"
-          break;
-      }
+      var tag = spaces + template.join(paths[i]);
       target.splice(start + i + 1, 0, tag);
     }
-    grunt.log.writeln(target.join('\n'));
+
+    file = target.join('\n');
+    // return;
+    fs.writeFileSync(path, file);
+
   }
 
-  var getTemplate = function () {
-    
+  var getTemplate = function (language) {
+    switch (language) {
+      case 'jade':
+        return ["script(type='text/javascript', src='", "')"];
+      case 'haml':
+        return ["%script{ type: 'text/javascript', src: '", "'}"];
+      case 'html':
+        return ["<script type='text/javascript' src='", "'></script"];
+
+    }
   }
 
   var prepareTarget = function (target) {
