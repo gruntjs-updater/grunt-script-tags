@@ -37,53 +37,45 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
+#### options.language
 Type: `String`
-Default value: `',  '`
+Default value: `jade`
+Options: jade, haml, html
 
-A string value that is used to do something with whatever.
+The target language
 
-#### options.punctuation
+#### options.root
 Type: `String`
-Default value: `'.'`
+Default Value: 'javascript'
 
-A string value that is used to do something else with whatever else.
+Beggining of js public directory. example: 'javascripts/folder/file.js'.
+
+#### options.start
+Type: `Array`
+Default Value: `[]`
+
+Manually add scripts that need to load first.
+
+#### options.end
+Type: `Array`
+Default Value: `[]`
+
+Manually add scripts that need to load last.
+
 
 ### Usage Examples
-
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
-
 ```js
-grunt.initConfig({
-  script_tags: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-})
-```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
-
-```js
-grunt.initConfig({
-  script_tags: {
+script_tags: {
+  test : {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
+      root: 'javascripts',
+      start: ['test/public/javascripts/test.js'],
+      end: ['test/public/javascripts/aa.js']
     },
     files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-})
+      'test/layout.jade' : ['test/public/javascripts/**/*.js']
+    }
+  }
+}
 ```
 
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
-
-## Release History
-_(Nothing yet)_
