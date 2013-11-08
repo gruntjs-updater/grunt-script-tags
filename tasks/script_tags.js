@@ -60,13 +60,15 @@ module.exports = function(grunt) {
       spaces = "";
     }
     var scriptTags = []
-    // clear start and end script from the rest
-    for (var i = 0; i < paths.length; i++) {
-      if (startScripts.indexOf(paths[i]) == -1 || endScripts.indexOf(paths[i]) == -1 ) {
-        paths.splice(i, 1);
+    var specialGroups = [startScripts, endScripts];
+
+    for (var i = 0; i < specialGroups.length; i++) {
+      for (var j = 0; j < specialGroups[i].length; j++) {
+        
+        var index = paths.indexOf(specialGroups[i][j]);
+        paths.splice(index,1);
       }
     }
-
     var groups = [startScripts, paths, endScripts];
 
     for (var i = 0; i < groups.length; i++) {
@@ -74,12 +76,13 @@ module.exports = function(grunt) {
         scriptTags.push(spaces + template.join(groups[i][j]));
       }      
     }
-
+    // add to array
     for (var i = 0; i < scriptTags.length; i++){
       target.splice(start + 1 + i, 0, scriptTags[i]);
       
     }
  
+    // write
     var file = target.join('\n');
     fs.writeFileSync(path, file);
 

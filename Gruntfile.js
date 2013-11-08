@@ -33,8 +33,8 @@ module.exports = function(grunt) {
       test : {
         options: {
           root: 'javascripts',
-          start: ['test/public/javascripts/test.js'],
-          end: ['test/public/javascripts/aa.js']
+          start: ['javascripts/test.js'],
+          end: ['javascripts/folder/aa.js']
         },
         files: {
           'test/layout.jade' : ['test/public/javascripts/**/*.js']
