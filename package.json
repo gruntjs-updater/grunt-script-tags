@@ -1,7 +1,7 @@
 {
   "name": "grunt-script-tags",
   "description": "Automatically add script tags for all scripts in a directory",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/blunckr/grunt-script-tags",
   "author": {
     "name": "blunckr"
